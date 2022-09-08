@@ -1,0 +1,20 @@
+{
+  "name": "fragments",
+  "version": "1.0.0",
+  "description": "To be updated...",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZhenyaChan/fragments.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZhenyaChan/fragments/issues"
+  },
+  "homepage": "https://github.com/ZhenyaChan/fragments#readme"
+}
