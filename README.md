@@ -1,4 +1,4 @@
-# CCP555 Project - fragments
+# CCP555 Project - Fragments Microservice
 
 REST API server of the Microservice Project called "fragments"
 
