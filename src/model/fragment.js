@@ -3,6 +3,7 @@
 const { randomUUID } = require('crypto');
 // Use https://www.npmjs.com/package/content-type to create/parse Content-Type headers
 const contentType = require('content-type');
+const logger = require('../logger');
 
 // Functions for working with fragment metadata/data using our DB
 const {
@@ -14,9 +15,54 @@ const {
   deleteFragment,
 } = require('./data');
 
+const supportedTypes = [
+  'text/plain',
+  'text/plain; charset=utf-8',
+  'text/markdown',
+  'application/json',
+  'text/html',
+  'image/png',
+  'image/jpeg',
+  'image/webp',
+  'image/gif',
+];
+
 class Fragment {
   constructor({ id, ownerId, created, updated, type, size = 0 }) {
-    // TODO
+    if (id) {
+      this.id = id;
+    } else {
+      this.id = randomUUID();
+    }
+
+    if (ownerId) {
+      this.ownerId = ownerId;
+    } else {
+      throw new Error(`ownerId is required, got ownerId=${ownerId}`);
+    }
+
+    if (Fragment.isSupportedType(type)) {
+      this.type = type;
+    } else {
+      throw new Error(`Invalid fragment type, got type=${type}`);
+    }
+
+    if (size < 0 || typeof size === 'string') {
+      throw new Error('size cannot be negative and cannot be a type of String');
+    } else {
+      this.size = size;
+    }
+
+    if (created) {
+      this.created = created;
+    } else {
+      this.created = new Date().toISOString();
+    }
+    if (updated) {
+      this.updated = updated;
+    } else {
+      this.updated = new Date().toISOString();
+    }
   }
 
   /**
@@ -26,7 +72,16 @@ class Fragment {
    * @returns Promise<Array<Fragment>>
    */
   static async byUser(ownerId, expand = false) {
-    // TODO
+    logger.info({ ownerId, expand }, 'byUser()');
+    try {
+      const fragments = await listFragments(ownerId, expand);
+      if (expand) {
+        return fragments.map((fragment) => new Fragment(fragment));
+      }
+      return fragments;
+    } catch (err) {
+      return [];
+    }
   }
 
   /**
@@ -36,7 +91,12 @@ class Fragment {
    * @returns Promise<Fragment>
    */
   static async byId(ownerId, id) {
-    // TODO
+    logger.info({ ownerId, id }, 'byId()');
+    try {
+      return new Fragment(await readFragment(ownerId, id));
+    } catch (err) {
+      throw new Error(`Cannot find the fragment with that ID`);
+    }
   }
 
   /**
@@ -46,7 +106,7 @@ class Fragment {
    * @returns Promise
    */
   static delete(ownerId, id) {
-    // TODO
+    return deleteFragment(ownerId, id);
   }
 
   /**
@@ -54,7 +114,8 @@ class Fragment {
    * @returns Promise
    */
   save() {
-    // TODO
+    this.updated = new Date().toISOString();
+    return writeFragment(this);
   }
 
   /**
@@ -62,7 +123,17 @@ class Fragment {
    * @returns Promise<Buffer>
    */
   getData() {
-    // TODO
+    try {
+      return new Promise((resolve, reject) => {
+        readFragmentData(this.ownerId, this.id)
+          .then((data) => resolve(Buffer.from(data)))
+          .catch(() => {
+            reject(new Error());
+          });
+      });
+    } catch (err) {
+      throw new Error(`Cannot get the data for this fragment`);
+    }
   }
 
   /**
@@ -71,7 +142,14 @@ class Fragment {
    * @returns Promise
    */
   async setData(data) {
-    // TODO
+    if (!data) {
+      throw new Error(`No data passed to setData()`);
+    } else {
+      this.updated = new Date().toISOString();
+      this.size = Buffer.byteLength(data);
+      await writeFragment(this);
+      return await writeFragmentData(this.ownerId, this.id, data);
+    }
   }
 
   /**
@@ -89,7 +167,8 @@ class Fragment {
    * @returns {boolean} true if fragment's type is text/*
    */
   get isText() {
-    // TODO
+    let result = this.mimeType.startsWith('text/');
+    return result;
   }
 
   /**
@@ -97,7 +176,13 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats() {
-    // TODO
+    let result = [];
+
+    if (this.type.includes('text/plain')) {
+      result = ['text/plain'];
+    }
+
+    return result;
   }
 
   /**
@@ -106,7 +191,12 @@ class Fragment {
    * @returns {boolean} true if we support this Content-Type (i.e., type/subtype)
    */
   static isSupportedType(value) {
-    // TODO
+    let result = false;
+
+    if (supportedTypes.includes(value)) {
+      result = true;
+    }
+    return result;
   }
 }
 

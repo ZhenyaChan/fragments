@@ -25,7 +25,7 @@ describe('test In-Memory Database backend and data model', () => {
   });
 
   test('readFragment() throws with non-existing ownerId and fragment id', async () => {
-    expect(() => readFragment('002', '222').expect.toThrow());
+    expect(() => readFragment('002', '222').rejects.toThrow());
   });
 
   test('readFragmentData() returns the same fragment data we writeFragmentData() into database', async () => {
@@ -36,7 +36,7 @@ describe('test In-Memory Database backend and data model', () => {
 
   test('readFragmentData() throws with non-existing fragment id', async () => {
     await writeFragment({ ownerId: '004', id: '4', fragment: '4rd test fragment' });
-    expect(() => readFragmentData('004', '444').expect.toThrow());
+    expect(() => readFragmentData('004', '444').rejects.toThrow());
   });
 
   test('listFragments() returns array of fragment ids with the same ownerId', async () => {
@@ -71,7 +71,7 @@ describe('test In-Memory Database backend and data model', () => {
 
     await deleteFragment('009', '9');
 
-    expect(() => readFragmentData('009', '9').expect.toThrow());
-    expect(() => readFragment('009', '9').expect.toThrow());
+    expect(() => readFragmentData('009', '9').rejects.toThrow());
+    expect(() => readFragment('009', '9').rejects.toThrow());
   });
 });
