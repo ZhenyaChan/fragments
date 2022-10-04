@@ -7,7 +7,7 @@ const {
   deleteFragment,
 } = require('../../src/model/data/memory');
 
-describe('test In-Memory Database backend', () => {
+describe('test In-Memory Database backend and data model', () => {
   test('writeFragment() returns nothing', async () => {
     const result = await writeFragment({ ownerId: 'aaa', id: 'a', fragment: 'aaa fragment' });
     expect(result).toBe(undefined);
