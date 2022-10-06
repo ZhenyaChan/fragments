@@ -10,7 +10,7 @@ describe('GET /v1/fragments', () => {
   test('incorrect credentials are denied', () =>
     request(app).get('/v1/fragments').auth('invalid@email.com', 'incorrect_password').expect(401));
 
-  // Using a valid username/password pair should give a success result with a .fragments array
+  // Using a valid username/password pair should give a success result with a fragments array
   test('authenticated users get a fragments array', async () => {
     const res = await request(app).get('/v1/fragments').auth('user1@email.com', 'password1');
     expect(res.statusCode).toBe(200);
