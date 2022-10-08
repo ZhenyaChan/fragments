@@ -49,7 +49,7 @@ describe('GET /v1/fragments', () => {
     expect(res.body.error.message).toBe('Unknown Fragment');
   });
 
-  test('html to text', async () => {
+  test('successful conversion of html extension to text', async () => {
     const req = await request(app)
       .post('/v1/fragments/')
       .auth('user1@email.com', 'password1')
