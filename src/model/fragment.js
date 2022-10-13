@@ -132,9 +132,17 @@ class Fragment {
    * @returns Promise
    */
   async setData(data) {
-    this.size = Buffer.byteLength(data);
-    this.updated = new Date(Date.now()).toISOString();
-    return writeFragmentData(this.ownerId, this.id, data);
+    if (!Buffer.isBuffer(data)) {
+      throw new Error('Data is not a Buffer');
+    }
+
+    try {
+      await this.save();
+      this.size = Buffer.byteLength(data);
+      return writeFragmentData(this.ownerId, this.id, data);
+    } catch (err) {
+      throw new Error(`Error Found: ${err}`);
+    }
   }
 
   /**
