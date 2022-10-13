@@ -67,12 +67,6 @@ describe('Fragment class', () => {
       expect(() => new Fragment({ ownerId: '1234', type: 'text/plain', size: -1 })).toThrow();
     });
 
-    test('invalid types throw', () => {
-      expect(
-        () => new Fragment({ ownerId: '1234', type: 'application/msword', size: 1 })
-      ).toThrow();
-    });
-
     test('valid types can be set', () => {
       validTypes.forEach((format) => {
         const fragment = new Fragment({ ownerId: '1234', type: format, size: 1 });

@@ -41,10 +41,10 @@ class Fragment {
       throw new Error(`ownerId is required, got ownerId=${ownerId}`);
     }
 
-    if (Fragment.isSupportedType(type)) {
+    if (type) {
       this.type = type;
     } else {
-      throw new Error(`Invalid fragment type, got type=${type}`);
+      throw new Error(`Content-Type is required, got Content-Type=${ownerId}`);
     }
 
     if (size < 0 || typeof size === 'string') {
@@ -123,17 +123,7 @@ class Fragment {
    * @returns Promise<Buffer>
    */
   getData() {
-    try {
-      return new Promise((resolve, reject) => {
-        readFragmentData(this.ownerId, this.id)
-          .then((data) => resolve(Buffer.from(data)))
-          .catch(() => {
-            reject(new Error());
-          });
-      });
-    } catch (err) {
-      throw new Error(`Cannot get the data for this fragment`);
-    }
+    return readFragmentData(this.ownerId, this.id);
   }
 
   /**
@@ -142,14 +132,9 @@ class Fragment {
    * @returns Promise
    */
   async setData(data) {
-    if (!data) {
-      throw new Error(`No data passed to setData()`);
-    } else {
-      this.updated = new Date().toISOString();
-      this.size = Buffer.byteLength(data);
-      await writeFragment(this);
-      return await writeFragmentData(this.ownerId, this.id, data);
-    }
+    this.size = Buffer.byteLength(data);
+    this.updated = new Date(Date.now()).toISOString();
+    return writeFragmentData(this.ownerId, this.id, data);
   }
 
   /**
@@ -191,12 +176,7 @@ class Fragment {
    * @returns {boolean} true if we support this Content-Type (i.e., type/subtype)
    */
   static isSupportedType(value) {
-    let result = false;
-
-    if (supportedTypes.includes(value)) {
-      result = true;
-    }
-    return result;
+    return supportedTypes.includes(value);
   }
 }
 
