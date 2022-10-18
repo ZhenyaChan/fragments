@@ -1,7 +1,7 @@
 const request = require('supertest');
 const hash = require('../../src/hash');
 const app = require('../../src/app');
-const { readFragmentData } = require('../../src/model/data');
+const { readFragmentData, listFragments } = require('../../src/model/data');
 
 describe('GET /v1/fragments', () => {
   // If the request is missing the Authorization header, it should be forbidden
@@ -63,5 +63,26 @@ describe('GET /v1/fragments', () => {
       .auth('user1@email.com', 'password1');
     expect(res.statusCode).toBe(200);
     expect(res.text).toBe('<h2> Html </h2>');
+  });
+
+  test('authenticated user successfully gets array/list of fragments GET /fragments/?expand=1', async () => {
+    await request(app)
+      .post('/v1/fragments')
+      .send('this is a testing fragment 1')
+      .set('Content-type', 'text/plain')
+      .auth('user1@email.com', 'password1');
+    await request(app)
+      .post('/v1/fragments')
+      .send('this is a testing fragment 2')
+      .set('Content-type', 'text/plain')
+      .auth('user1@email.com', 'password1');
+    var result = await listFragments(hash('user1@email.com'), 1);
+    const res = await request(app)
+      .get('/v1/fragments?expand=1')
+      .auth('user1@email.com', 'password1');
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.status).toBe('ok');
+    expect(res.body.fragments).toEqual(result);
   });
 });
