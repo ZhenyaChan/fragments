@@ -46,6 +46,10 @@ COPY --from=dependencies \
 # We default to use port 8080 in our service
 ENV PORT=8080
 
+# Set healthcheck for the server
+HEALTHCHECK --interval=15s --timeout=30s --start-period=10s --retries=3 \
+  CMD curl --fail http://localhost:${PORT}/ || exit 1
+
 # Start the container by running our server
 CMD ["node", "src/index.js"]
 
