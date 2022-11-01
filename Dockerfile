@@ -38,6 +38,8 @@ COPY ./tests/.htpasswd ./tests/.htpasswd
 FROM node:16.18-alpine3.15@sha256:9598b4e253236c8003d4e4b1acde80a6ca781fc231a7e670ecc2f3183c94ea5e AS production
 
 WORKDIR /
+# install curl
+RUN apk add --no-cache dumb-init~=1.2.5 curl=~7.80.0-r4
 COPY --from=dependencies \
   /app/node_modules/ /app/ \
   /app/src/ /app/ \
@@ -51,7 +53,7 @@ HEALTHCHECK --interval=15s --timeout=30s --start-period=10s --retries=3 \
   CMD curl --fail http://localhost:${PORT}/ || exit 1
 
 # Start the container by running our server
-CMD ["node", "src/index.js"]
+CMD ["dumb-init", "node", "src/index.js"]
 
 # We run our service on port 8080
 EXPOSE 8080
