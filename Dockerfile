@@ -38,7 +38,7 @@ COPY ./tests/.htpasswd ./tests/.htpasswd
 FROM node:16.18-alpine3.15@sha256:9598b4e253236c8003d4e4b1acde80a6ca781fc231a7e670ecc2f3183c94ea5e AS production
 
 WORKDIR /
-# install curl
+# install curl and dumb-init
 RUN apk add --no-cache dumb-init~=1.2.5 curl=~7.80.0-r4
 COPY --from=dependencies \
   /app/node_modules/ /app/ \
