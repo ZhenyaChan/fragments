@@ -5,12 +5,13 @@ const logger = require('../../logger');
 /**
  * Get a list of fragments for the current user
  */
-
-let fragment;
-
 module.exports = async (req, res) => {
-  fragment = await Fragment.byUser(req.user, req.query.expand);
+  let isTrue = false;
+  if (req.query.expand == 1) {
+    isTrue = true;
+  }
 
-  res.status(200).json(createSuccessResponse({ fragments: fragment }));
-  logger.info({ fragmentList: fragment }, `User's fragment list have been retrieved successfully`);
+  const fragments = await Fragment.byUser(req.user, isTrue);
+  res.status(200).send(createSuccessResponse({ fragments }));
+  logger.info({ fragments }, `User's fragment list have been retrieved successfully`);
 };
