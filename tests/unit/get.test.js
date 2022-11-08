@@ -25,7 +25,7 @@ describe('GET /v1/fragments', () => {
     expect(res.body.fragments).toEqual([]);
   });
 
-  test('authenticated user gets fragment array by ID', async () => {
+  test('authenticated user gets fragment by ID', async () => {
     const req = await request(app)
       .post('/v1/fragments/')
       .auth('user1@email.com', 'password1')
@@ -39,7 +39,7 @@ describe('GET /v1/fragments', () => {
     expect(res.text).toBe(fragment.toString());
   });
 
-  test('invalid ID for the GET request should give an appropriate error', async () => {
+  test('invalid fragment ID for the GET request should give an appropriate error', async () => {
     const res = await request(app)
       .get('/v1/fragments/invalidID')
       .auth('user1@email.com', 'password1');
