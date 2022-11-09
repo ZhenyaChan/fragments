@@ -47,7 +47,7 @@ describe('GET /v1/fragments', () => {
     expect(res.body.error.message).toBe('Unknown Fragment');
   });
 
-  test('successful conversion of html extension to text', async () => {
+  test('successful conversion of html extension to text(.txt)', async () => {
     const req = await request(app)
       .post('/v1/fragments/')
       .auth('user1@email.com', 'password1')
@@ -59,6 +59,47 @@ describe('GET /v1/fragments', () => {
       .auth('user1@email.com', 'password1');
     expect(res.statusCode).toBe(200);
     expect(res.text).toBe('<h2> Html </h2>');
+  });
+
+  test('successful conversion of markdown(.md) extension to html', async () => {
+    const req = await request(app)
+      .post('/v1/fragments/')
+      .auth('user1@email.com', 'password1')
+      .send('# This is a markdown type fragment')
+      .set('Content-type', 'text/markdown');
+
+    const res = await request(app)
+      .get(`/v1/fragments/${req.body.fragment.id}.html`)
+      .auth('user1@email.com', 'password1');
+    expect(res.statusCode).toBe(200);
+    expect(res.text).toEqual('<h1># This is a markdown type fragment</h1>\n');
+  });
+
+  test('successful conversion of text/markdown(.md) extension to .md', async () => {
+    const req = await request(app)
+      .post('/v1/fragments/')
+      .auth('user1@email.com', 'password1')
+      .send('# This is a markdown type fragment')
+      .set('Content-type', 'text/markdown');
+
+    const res = await request(app)
+      .get(`/v1/fragments/${req.body.fragment.id}.md`)
+      .auth('user1@email.com', 'password1');
+    expect(res.statusCode).toBe(200);
+    expect(res.text).toEqual('# This is a markdown type fragment');
+  });
+
+  test('unsuccessful conversion of text/plain extension to the unsupported extension', async () => {
+    const req = await request(app)
+      .post('/v1/fragments/')
+      .auth('user1@email.com', 'password1')
+      .send('This is a text type fragment')
+      .set('Content-type', 'text/plain');
+
+    const res = await request(app)
+      .get(`/v1/fragments/${req.body.fragment.id}.html`)
+      .auth('user1@email.com', 'password1');
+    expect(res.statusCode).toBe(415);
   });
 
   test('authenticated user successfully gets array/list of fragments GET /fragments/?expand=1', async () => {
