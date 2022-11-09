@@ -73,15 +73,8 @@ class Fragment {
    */
   static async byUser(ownerId, expand = false) {
     logger.info({ ownerId, expand }, 'byUser()');
-    try {
-      const fragments = await listFragments(ownerId, expand);
-      if (expand) {
-        return fragments.map((fragment) => new Fragment(fragment));
-      }
-      return fragments;
-    } catch (err) {
-      return [];
-    }
+    const result = await listFragments(ownerId, expand);
+    return result;
   }
 
   /**
@@ -92,11 +85,9 @@ class Fragment {
    */
   static async byId(ownerId, id) {
     logger.info({ ownerId, id }, 'byId()');
-    try {
-      return new Fragment(await readFragment(ownerId, id));
-    } catch (err) {
-      throw new Error(`Cannot find the fragment with that ID`);
-    }
+    const result = await readFragment(ownerId, id);
+    if (!result) throw new Error();
+    return result;
   }
 
   /**
@@ -132,17 +123,9 @@ class Fragment {
    * @returns Promise
    */
   async setData(data) {
-    if (!Buffer.isBuffer(data)) {
-      throw new Error('Data is not a Buffer');
-    }
-
-    try {
-      await this.save();
-      this.size = Buffer.byteLength(data);
-      return writeFragmentData(this.ownerId, this.id, data);
-    } catch (err) {
-      throw new Error(`Error Found: ${err}`);
-    }
+    this.size = Buffer.byteLength(data);
+    this.updated = new Date(Date.now()).toISOString();
+    return await writeFragmentData(this.ownerId, this.id, data);
   }
 
   /**
@@ -160,8 +143,7 @@ class Fragment {
    * @returns {boolean} true if fragment's type is text/*
    */
   get isText() {
-    let result = this.mimeType.startsWith('text/');
-    return result;
+    return this.mimeType.startsWith('text');
   }
 
   /**
@@ -171,8 +153,15 @@ class Fragment {
   get formats() {
     let result = [];
 
-    if (this.type.includes('text/plain')) {
-      result = ['text/plain'];
+    if (this.type.includes('plain')) {
+      result.push(this.mimeType);
+    } else if (this.type.includes('html')) {
+      result.push('text/plain');
+      result.push(this.mimeType);
+    } else if (this.type.includes('markdown')) {
+      result.push('text/plain');
+      result.push('text/html');
+      result.push(this.mimeType);
     }
 
     return result;
