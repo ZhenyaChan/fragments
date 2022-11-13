@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
     try {
       const fragment = new Fragment({
         ownerId: req.user,
-        type: req.get('Content-Type'), // 'text/plain',
+        type: req.get('Content-type'),
         size: req.body.length,
       });
       // save the fragment
