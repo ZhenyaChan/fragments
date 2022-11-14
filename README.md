@@ -37,20 +37,6 @@ npm run lint
 
 ## How to run the unit testing (run JEST)
 
-- To run the unit testing normally:
-
-```sh
-npm run test
-```
-
-- To run the unit testing after every change:
-
-```sh
-npm run test:watch
-```
-
-- To run the unit testing and get the testing coverage report
-
-```sh
-npm run coverage
-```
+- To run the unit testing normally: `npm run test`
+- To run the unit testing after every change: `npm run test:watch`
+- To run the unit testing and get the testing coverage report: `npm run coverage`
