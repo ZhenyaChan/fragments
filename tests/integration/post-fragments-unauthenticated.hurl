@@ -10,6 +10,7 @@ user1@email.com:passwordWrong
 
 # 1. We expect to get back an HTTP 201
 HTTP/1.1 401
+
 [Asserts]
 jsonpath "$.status" == "error"
 jsonpath "$.error.code" == 401

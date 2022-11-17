@@ -10,6 +10,7 @@ user1@email.com:password1
 
 # 1. We expect to get back an HTTP 201
 HTTP/1.1 201
+
 [Captures]
 url: header "Location"
 
