@@ -6,6 +6,10 @@ const { version, author } = require('../../package.json');
 // Our authorization middleware
 const { authenticate } = require('../authorization');
 
+// use the built-in os.hostname() function to get the server's hostname and add it to the JSON we return for the health check
+// see https://nodejs.org/api/os.html#oshostname
+const { hostname } = require('os');
+
 // Create a router that we can use to mount our API
 const router = express.Router();
 
@@ -27,9 +31,11 @@ router.get('/', (req, res) => {
   // Send a 200 'OK' response
   res.status(200).json(
     createSuccessResponse({
-      author,
+      author: author,
       githubUrl: 'https://github.com/ZhenyaChan/fragments',
       version,
+      // include the hostname in the response
+      hostname: hostname(),
     })
   );
 });
