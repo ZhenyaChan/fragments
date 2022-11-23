@@ -47,7 +47,7 @@ module.exports = async (req, res) => {
         res
           .set('Content-type', fragmentMetadata.mimeType)
           .status(200)
-          .send(md.render(`# ${fragment}`));
+          .send(md.render(`${fragment}`));
       } else {
         throw new Error('The Extension is Unknown/Unsupported type!');
       }
