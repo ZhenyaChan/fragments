@@ -72,7 +72,7 @@ describe('GET /v1/fragments', () => {
       .get(`/v1/fragments/${req.body.fragment.id}.html`)
       .auth('user1@email.com', 'password1');
     expect(res.statusCode).toBe(200);
-    expect(res.text).toEqual('<h1># This is a markdown type fragment</h1>\n');
+    expect(res.text).toEqual('<h1>This is a markdown type fragment</h1>\n');
   });
 
   test('successful conversion of text/markdown(.md) extension to .md', async () => {
