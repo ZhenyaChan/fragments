@@ -1,4 +1,4 @@
-const { createSuccessResponse } = require('../../response');
+const { createSuccessResponse, createErrorResponse } = require('../../response');
 const { Fragment } = require('../../model/fragment');
 const logger = require('../../logger');
 
@@ -6,12 +6,11 @@ const logger = require('../../logger');
  * Get a list of fragments for the current user
  */
 module.exports = async (req, res) => {
-  let isTrue = false;
-  if (req.query.expand == 1) {
-    isTrue = true;
+  try {
+    const fragments = await Fragment.byUser(req.user, req.query.expand);
+    res.status(200).send(createSuccessResponse({ fragments }));
+    logger.info({ fragments }, `User's fragment list have been retrieved successfully`);
+  } catch (err) {
+    res.status(404).send(createErrorResponse(404, err));
   }
-
-  const fragments = await Fragment.byUser(req.user, isTrue);
-  res.status(200).send(createSuccessResponse({ fragments }));
-  logger.info({ fragments }, `User's fragment list have been retrieved successfully`);
 };
