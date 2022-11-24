@@ -33,6 +33,7 @@ router.get('/fragments/:id/info', require('./get_metadata'));
 // Use a raw body parser for POST, which will give a `Buffer` Object or `{}` at `req.body`
 router.post('/fragments', rawBody(), require('./post'));
 // DELETE /v1/fragments
+router.delete('/fragments/:id', require('./delete'));
 // PUT /v1/fragments
 
 module.exports = router;
