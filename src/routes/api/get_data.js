@@ -54,7 +54,7 @@ module.exports = async (req, res) => {
     }
   } catch (Error) {
     // extension used is an unknown/unsupported type or the fragment cannot be converted to this type
-    if (Error.message) {
+    if (Error.message === 'The Extension is Unknown/Unsupported type!') {
       res.status(415).send(createErrorResponse(415, Error.message));
     } else {
       //id is an unknown fragment
