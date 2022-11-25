@@ -89,9 +89,9 @@ jobs:
             NODE_ENV=production
             AWS_COGNITO_CLIENT_ID=${{ secrets.AWS_COGNITO_CLIENT_ID }}
             AWS_COGNITO_POOL_ID=${{ secrets.AWS_COGNITO_POOL_ID }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+            AWS-ACCESS-KEY-ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
