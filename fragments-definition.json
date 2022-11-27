@@ -28,7 +28,7 @@
       "environment": [
         {
           "name": "API_URL",
-          "value": "http://EC2Co-EcsEl-NBZX6CN0ODCK-679632985.us-east-1.elb.amazonaws.com:8080"
+          "value": "http://localhost:8080"
         },
         {
           "name": "AWS_S3_BUCKET_NAME",
