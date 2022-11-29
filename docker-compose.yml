@@ -9,11 +9,8 @@ services:
     build: .
     # Environment variables to use
     environment:
-      # Our API will be running on http://localhost:8080
       - API_URL=http://localhost:8080
-      # Use Basic Auth (for running tests, CI)
       - HTPASSWD_FILE=tests/.htpasswd
-      # Use the LOG_LEVEL set in the host environment, or default to info
       - LOG_LEVEL=${LOG_LEVEL:-debug}
       # AWS credentials to use, default to "test"
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-test}
@@ -56,7 +53,5 @@ services:
     environment:
       # See https://docs.localstack.cloud/localstack/configuration/ and
       # https://hub.docker.com/r/localstack/localstack for config details.
-      # We only want to run S3
       - SERVICES=s3
-      # We're always working in us-east-1
       - DEFAULT_REGION=us-east-1
