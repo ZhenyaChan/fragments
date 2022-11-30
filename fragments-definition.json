@@ -31,6 +31,10 @@
           "value": "http://localhost:8080"
         },
         {
+          "name": "AWS_DYNAMODB_TABLE_NAME",
+          "value": "fragments"
+        },
+        {
           "name": "AWS_S3_BUCKET_NAME",
           "value": "qdtran3-fragments"
         },
