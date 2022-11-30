@@ -12,7 +12,6 @@ services:
       - API_URL=http://localhost:8080
       - HTPASSWD_FILE=tests/.htpasswd
       - LOG_LEVEL=${LOG_LEVEL:-debug}
-      # Use the LocalStack endpoint vs. AWS for S3 AWS SDK clients.
       # NOTE: we use Docker's internal network to the localstack container
       - AWS_S3_ENDPOINT_URL=http://localstack:4566
       # Use the DynamoDB local endpoint vs. AWS for DynamoDB AWS SDK clients.
