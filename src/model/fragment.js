@@ -162,6 +162,11 @@ class Fragment {
       result.push('text/plain');
       result.push('text/html');
       result.push(this.mimeType);
+    } else if (this.type.includes('image')) {
+      result.push('image/png');
+      result.push('image/jpeg');
+      result.push('image/webp');
+      result.push('image/gif');
     }
 
     return result;
