@@ -4,6 +4,9 @@ const { randomUUID } = require('crypto');
 // Use https://www.npmjs.com/package/content-type to create/parse Content-Type headers
 const contentType = require('content-type');
 const logger = require('../logger');
+const sharp = require('sharp');
+const MarkdownIt = require('markdown-it'),
+  md = new MarkdownIt();
 
 // Functions for working with fragment metadata/data using our DB
 const {
@@ -152,21 +155,21 @@ class Fragment {
    */
   get formats() {
     let result = [];
-
-    if (this.type.includes('plain')) {
-      result.push(this.mimeType);
-    } else if (this.type.includes('html')) {
-      result.push('text/plain');
-      result.push(this.mimeType);
-    } else if (this.type.includes('markdown')) {
-      result.push('text/plain');
-      result.push('text/html');
-      result.push(this.mimeType);
-    } else if (this.type.includes('image')) {
-      result.push('image/png');
-      result.push('image/jpeg');
-      result.push('image/webp');
-      result.push('image/gif');
+    if (
+      this.type.includes('image/png') ||
+      this.type.includes('image/jpeg') ||
+      this.type.includes('image/gif') ||
+      this.type.includes('image/webp')
+    ) {
+      result = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
+    } else if (this.type.includes('text/plain')) {
+      result = ['text/plain'];
+    } else if (this.type.includes('text/markdown')) {
+      result = ['text/plain', 'text/html', 'text/markdown'];
+    } else if (this.type.includes('text/html')) {
+      result = ['text/plain', 'text/html'];
+    } else if (this.type.includes('application/json')) {
+      result = ['application/json', 'text/plain'];
     }
 
     return result;
@@ -179,6 +182,59 @@ class Fragment {
    */
   static isSupportedType(value) {
     return supportedTypes.includes(value);
+  }
+
+  async textConvert(value) {
+    var result, fragmentData;
+    fragmentData = await this.getData();
+    if (value == 'plain') {
+      if (this.type == 'application/json') {
+        result = JSON.parse(fragmentData);
+      } else {
+        result = fragmentData;
+      }
+    } else if (value == 'html') {
+      if (this.type.endsWith('markdown')) {
+        result = md.render(fragmentData.toString());
+      }
+    }
+
+    return result;
+  }
+
+  async imageConvert(value) {
+    var result, fragmentData;
+    fragmentData = await this.getData();
+
+    if (this.type.startsWith('image')) {
+      if (value == 'gif') {
+        result = sharp(fragmentData).gif();
+      } else if (value == 'jpg' || value == 'jpeg') {
+        result = sharp(fragmentData).jpeg();
+      } else if (value == 'webp') {
+        result = sharp(fragmentData).webp();
+      } else if (value == 'png') {
+        result = sharp(fragmentData).png();
+      }
+    }
+
+    return result.toBuffer();
+  }
+
+  // based on the passed extension returns type name
+  extConvert(value) {
+    var extension;
+    if (value == 'txt') {
+      extension = 'plain';
+    } else if (value == 'jpg') {
+      extension = 'jpeg';
+    } else if (value == 'md') {
+      extension = 'markdown';
+    } else {
+      extension = value;
+    }
+
+    return extension;
   }
 }
 
