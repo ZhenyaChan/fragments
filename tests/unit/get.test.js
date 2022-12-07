@@ -101,6 +101,7 @@ describe('GET /v1/fragments', () => {
     const res = await request(app)
       .get(`/v1/fragments/${req.body.fragment.id}`)
       .auth('user1@email.com', 'password1');
+    expect(res.type).toBe('image/jpeg');
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual(Buffer.from(fs.readFileSync(`${__dirname}/test-files/cat1.jpg`)));
   });
@@ -118,6 +119,36 @@ describe('GET /v1/fragments', () => {
       .auth('user1@email.com', 'password1');
     expect(res.statusCode).toBe(200);
     expect(res.type).toBe('image/gif');
+  });
+
+  test('successful conversion of the existing jpg file to webp', async () => {
+    const req = await request(app)
+      .post('/v1/fragments/')
+      .auth('user1@email.com', 'password1')
+      .set('Content-type', 'image/jpeg')
+      .send(fs.readFileSync(`${__dirname}/test-files/cat1.jpg`));
+    expect(req.status).toBe(201);
+
+    const res = await request(app)
+      .get(`/v1/fragments/${req.body.fragment.id}.webp`)
+      .auth('user1@email.com', 'password1');
+    expect(res.statusCode).toBe(200);
+    expect(res.type).toBe('image/webp');
+  });
+
+  test('successful conversion of the existing jpg file to webp', async () => {
+    const req = await request(app)
+      .post('/v1/fragments/')
+      .auth('user1@email.com', 'password1')
+      .set('Content-type', 'image/jpeg')
+      .send(fs.readFileSync(`${__dirname}/test-files/cat1.jpg`));
+    expect(req.status).toBe(201);
+
+    const res = await request(app)
+      .get(`/v1/fragments/${req.body.fragment.id}.png`)
+      .auth('user1@email.com', 'password1');
+    expect(res.statusCode).toBe(200);
+    expect(res.type).toBe('image/png');
   });
 
   test('unsuccessful conversion of text/plain extension to the unsupported extension', async () => {
