@@ -1,6 +1,7 @@
 const request = require('supertest');
 const hash = require('../../src/hash');
 const app = require('../../src/app');
+const fs = require('fs');
 const { readFragmentData, listFragments } = require('../../src/model/data');
 
 describe('GET /v1/fragments', () => {
@@ -87,6 +88,36 @@ describe('GET /v1/fragments', () => {
       .auth('user1@email.com', 'password1');
     expect(res.statusCode).toBe(200);
     expect(res.text).toEqual('# This is a markdown type fragment');
+  });
+
+  test('GET by ID existing image file', async () => {
+    const req = await request(app)
+      .post('/v1/fragments/')
+      .auth('user1@email.com', 'password1')
+      .set('Content-type', 'image/jpeg')
+      .send(fs.readFileSync(`${__dirname}/test-files/cat1.jpg`));
+    expect(req.status).toBe(201);
+
+    const res = await request(app)
+      .get(`/v1/fragments/${req.body.fragment.id}`)
+      .auth('user1@email.com', 'password1');
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual(Buffer.from(fs.readFileSync(`${__dirname}/test-files/cat1.jpg`)));
+  });
+
+  test('successful conversion of the existing jpg file to gif', async () => {
+    const req = await request(app)
+      .post('/v1/fragments/')
+      .auth('user1@email.com', 'password1')
+      .set('Content-type', 'image/jpeg')
+      .send(fs.readFileSync(`${__dirname}/test-files/cat1.jpg`));
+    expect(req.status).toBe(201);
+
+    const res = await request(app)
+      .get(`/v1/fragments/${req.body.fragment.id}.gif`)
+      .auth('user1@email.com', 'password1');
+    expect(res.statusCode).toBe(200);
+    expect(res.type).toBe('image/gif');
   });
 
   test('unsuccessful conversion of text/plain extension to the unsupported extension', async () => {
