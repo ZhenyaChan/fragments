@@ -37,8 +37,8 @@ user1@email.com:password1
 
 # Confirm that the server returns expected response
 HTTP/1.1 415
-Content-Type: application/json; charset=utf-8
+Content-Type: text/markdown; charset=utf-8
 [Asserts]
 jsonpath "$.status" == "error"
 jsonpath "$.error.code" == 415
-jsonpath "$.error.message" == "The Extension is Unknown/Unsupported type!"
+jsonpath "$.error.message" == "The Extension is Unknown/Unsupported type"

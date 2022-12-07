@@ -37,7 +37,7 @@ user1@email.com:password1
 
 # Confirm that the server returns expected response
 HTTP/1.1 200
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
 Content-Length: 32
 [Asserts]
 body == "<h2>This is a html fragment</h2>"

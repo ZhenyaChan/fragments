@@ -37,7 +37,7 @@ user1@email.com:password1
 
 # Confirm that the server returns expected response
 HTTP/1.1 200
-Content-Type: text/html; charset=utf-8
+Content-Type: text/html
 Content-Length: 37
 [Asserts]
 body == "<h2>This is a markdown fragment</h2>\n"
