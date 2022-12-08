@@ -61,14 +61,14 @@ npm run lint
 
 ## Docker Image
 
-This project is "dockerized", image resides in DockerHub repository.
+This project is Dockerized. The image resides in DockerHub repository.
 
-Follow the link for access: [zhenyachan/fragments](https://hub.docker.com/repository/docker/zhenyachan/fragments/tags)
+Follow the link to access: [zhenyachan/fragments](https://hub.docker.com/repository/docker/zhenyachan/fragments/tags)
 
 OR
 
 Run this command to download the image:
 
 ```sh
-docker pull zhenyachan/fragments:latest`
+docker pull zhenyachan/fragments:latest
 ```
