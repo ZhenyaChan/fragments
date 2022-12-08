@@ -189,7 +189,7 @@ class Fragment {
     fragmentData = await this.getData();
     if (value == 'plain') {
       if (this.type == 'application/json') {
-        result = JSON.stringify(fragmentData);
+        result = JSON.parse(fragmentData);
       } else {
         result = fragmentData;
       }
