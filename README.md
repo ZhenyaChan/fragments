@@ -10,9 +10,28 @@ The REST API server of the Microservice Project called "fragments" will respond 
 - GET by ID
   - GET fragment data by fragment ID (/v1/fragments/:id)
   - GET fragment metadata by fragment ID (/v1/fragments/:id/info)
+  - GET fragment data by fragment ID and covert it to the same/another extension type (.ext) (/v1/fragments/:id.ext)
+
+#### Valid Fragment Conversions
+
+This is the current list of valid conversions for each fragment type (others may be added in the future):
+
+| Type               | Valid Conversion Extensions    |
+| ------------------ | ------------------------------ |
+| `text/plain`       | `.txt`                         |
+| `text/markdown`    | `.md`, `.html`, `.txt`         |
+| `text/html`        | `.html`, `.txt`                |
+| `application/json` | `.json`, `.txt`                |
+| `image/png`        | `.png`, `.jpg`, `.webp`, `gif` |
+| `image/jpeg`       | `.png`, `.jpg`, `.webp`, `gif` |
+| `image/webp`       | `.png`, `.jpg`, `.webp`, `gif` |
+| `image/gif`        | `.png`, `.jpg`, `.webp`, `gif` |
+
+- PUT by ID
+  - UPDATE fragment by ID (/v1/fragments/:id)
+- DELETE by ID
+  - DELETE fragment by ID (/v1/fragments/:id)
 - POST (/v1/fragments)
-- PUT (under development...)
-- DELETE (under development...)
 
 ## How to Set Up the Project
 
@@ -40,3 +59,12 @@ npm run lint
 - To run the unit testing normally: `npm run test`
 - To run the unit testing after every change: `npm run test:watch`
 - To run the unit testing and get the testing coverage report: `npm run coverage`
+
+## Docker Image
+
+This project is "dockerized", image resides in DockerHub repository.
+Follow the link for access: [zhenyachan/fragments](https://hub.docker.com/repository/docker/zhenyachan/fragments/tags)
+
+OR
+
+Run this command to download the image: `docker pull zhenyachan/fragments:latest`
