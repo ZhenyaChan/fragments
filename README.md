@@ -11,6 +11,11 @@ The REST API server of the Microservice Project called "fragments" will respond 
   - GET fragment data by fragment ID (/v1/fragments/:id)
   - GET fragment metadata by fragment ID (/v1/fragments/:id/info)
   - GET fragment data by fragment ID and covert it to the same/another extension type (.ext) (/v1/fragments/:id.ext)
+- PUT by ID
+  - UPDATE fragment by ID (/v1/fragments/:id)
+- DELETE by ID
+  - DELETE fragment by ID (/v1/fragments/:id)
+- POST (/v1/fragments)
 
 #### Valid Fragment Conversions
 
@@ -26,12 +31,6 @@ This is the current list of valid conversions for each fragment type (others may
 | `image/jpeg`       | `.png`, `.jpg`, `.webp`, `gif` |
 | `image/webp`       | `.png`, `.jpg`, `.webp`, `gif` |
 | `image/gif`        | `.png`, `.jpg`, `.webp`, `gif` |
-
-- PUT by ID
-  - UPDATE fragment by ID (/v1/fragments/:id)
-- DELETE by ID
-  - DELETE fragment by ID (/v1/fragments/:id)
-- POST (/v1/fragments)
 
 ## How to Set Up the Project
 
