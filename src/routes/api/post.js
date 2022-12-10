@@ -13,10 +13,10 @@ module.exports = async (req, res) => {
         type: req.get('Content-type'),
         size: req.body.length,
       });
-      // save the fragment
-      await fragment.save();
       // save the binary data of the fragment
       await fragment.setData(req.body);
+      // save the fragment
+      await fragment.save();
 
       // set the location of the fragment and send back the response with the fragment data
       res
