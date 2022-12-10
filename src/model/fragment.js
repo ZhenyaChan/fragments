@@ -75,9 +75,18 @@ class Fragment {
    * @returns Promise<Array<Fragment>>
    */
   static async byUser(ownerId, expand = false) {
-    logger.info({ ownerId, expand }, 'byUser()');
-    const result = await listFragments(ownerId, expand);
-    return result;
+    // logger.info({ ownerId, expand }, 'byUser()');
+    // const result = await listFragments(ownerId, expand);
+    // return result;
+    try {
+      logger.debug({ ownerId, expand }, 'Fragment.byUser()');
+      const fragments = await listFragments(ownerId, expand);
+      return expand ? fragments.map((fragment) => new Fragment(fragment)) : fragments;
+    } catch (err) {
+      // A user might not have any fragments (yet), so return an empty
+      // list instead of an error when there aren't any.
+      return [];
+    }
   }
 
   /**
