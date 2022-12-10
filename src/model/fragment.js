@@ -95,7 +95,7 @@ class Fragment {
   static async byId(ownerId, id) {
     logger.info({ ownerId, id }, 'byId()');
     try {
-      return await readFragment(ownerId, id);
+      return new Fragment(await readFragment(ownerId, id));
     } catch (error) {
       throw new Error('Unable to find fragment with that id');
     }
@@ -136,7 +136,7 @@ class Fragment {
   async setData(data) {
     try {
       if (!data) {
-        return Promise.reject(new Error('Data cannot be empty'));
+        return Promise.reject(new Error('Data cannot be empty.'));
       }
       this.updated = new Date().toISOString();
       this.size = data.length;
