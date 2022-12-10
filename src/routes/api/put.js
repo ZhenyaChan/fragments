@@ -11,7 +11,6 @@ module.exports = async (req, res) => {
         .status(400)
         .send(createErrorResponse(400, 'Fragment type can not be changed after it is created'));
     } else {
-      await fragment.save();
       await fragment.setData(req.body);
       res.location(`${api}/v1/fragments/${fragment.id}`);
       res.status(200).send(createSuccessResponse({ fragment, formats: fragment.formats }));

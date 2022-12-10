@@ -93,14 +93,11 @@ class Fragment {
    * @returns Promise<Fragment>
    */
   static async byId(ownerId, id) {
+    logger.info({ ownerId, id }, 'byId()');
     try {
-      const result = await readFragment(ownerId, id);
-      if (!result) {
-        throw new Error('No fragment found.');
-      }
-      return result;
-    } catch (err) {
-      throw new Error(err);
+      return new Fragment(await readFragment(ownerId, id));
+    } catch (error) {
+      throw new Error('Unable to find fragment with that id');
     }
   }
 
@@ -139,6 +136,7 @@ class Fragment {
   async setData(data) {
     this.size = Buffer.byteLength(data);
     this.updated = new Date(Date.now()).toISOString();
+    await writeFragment(this);
     return await writeFragmentData(this.ownerId, this.id, data);
   }
 
