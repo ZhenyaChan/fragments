@@ -93,10 +93,15 @@ class Fragment {
    * @returns Promise<Fragment>
    */
   static async byId(ownerId, id) {
-    logger.info({ ownerId, id }, 'byId()');
-    const result = await readFragment(ownerId, id);
-    if (!result) throw new Error();
-    return result;
+    try {
+      const result = await readFragment(ownerId, id);
+      if (!result) {
+        throw new Error('No fragment found.');
+      }
+      return result;
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 
   /**
