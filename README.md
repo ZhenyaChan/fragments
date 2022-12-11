@@ -72,3 +72,7 @@ Run this command to download the image:
 ```sh
 docker pull zhenyachan/fragments:latest
 ```
+
+## Video Walk-through
+
+The video walk-through for this project is available via this link: [fragments-microservice](https://www.youtube.com/watch?v=E4285LQxbhA)
